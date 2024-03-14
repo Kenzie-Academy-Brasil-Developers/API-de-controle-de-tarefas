@@ -6,5 +6,8 @@ import { prisma } from "../database/prisma";
 export const request = supertest(app);
 
 beforeEach(async () => {
-   await prisma.$transaction([prisma.category.deleteMany(), prisma.task.deleteMany()]);
+  await prisma.$transaction([
+    prisma.category.deleteMany(),
+    prisma.task.deleteMany(),
+  ]);
 });

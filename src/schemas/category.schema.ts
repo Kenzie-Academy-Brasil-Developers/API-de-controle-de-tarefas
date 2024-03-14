@@ -5,4 +5,5 @@ const categorySchema = z.object({
   name: z.string().min(1),
 });
 const categoryCreateSchema = categorySchema.omit({ id: true });
+
 export { categorySchema, categoryCreateSchema };

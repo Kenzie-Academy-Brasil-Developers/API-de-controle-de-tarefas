@@ -3,12 +3,15 @@ import { categorySchema } from "./category.schema";
 
 const taskSchema = z.object({
   id: z.number().positive(),
-  title: z.string().min(1).max(255),
+  title: z.string().min(1),
   content: z.string().min(1),
   finished: z.boolean().default(false),
   categoryId: z.number().positive().nullish(),
 });
 
+const taskCategoryReturn = taskSchema.extend({
+  category: categorySchema.nullish(),
+});
 const taskCreateSchema = taskSchema.omit({ id: true });
 const taskUpdateSchema = taskSchema.omit({ id: true }).partial();
 const taskReturnSchema = taskSchema
@@ -17,4 +20,10 @@ const taskReturnSchema = taskSchema
   })
   .omit({ categoryId: true });
 
-export { taskCreateSchema, taskUpdateSchema, taskReturnSchema, taskSchema };
+export {
+  taskCreateSchema,
+  taskUpdateSchema,
+  taskReturnSchema,
+  taskSchema,
+  taskCategoryReturn,
+};

@@ -1,16 +1,40 @@
 import { Router } from "express";
 import { TaskController } from "../controllers/taskController";
+import { taskCreateSchema, taskUpdateSchema } from "../schemas/task.schema";
+import { TaskMiddlewares } from "../middlewares/taskMiddlewares";
 
 export const taskRouter = Router();
 
 const taskController = new TaskController();
 
-taskRouter.post("/register", taskController.createTask);
+const taskMiddlewares = new TaskMiddlewares();
 
-taskRouter.get("", taskController.getAllTask);
+taskRouter.post(
+  "/",
+  taskMiddlewares.validateBody(taskCreateSchema),
+  taskMiddlewares.ensureCategoryExists,
+  taskController.create
+);
 
-taskRouter.get("/:taskId", taskController.getById);
+taskRouter.get("/", taskController.findOne);
 
-taskRouter.patch("/:taskId", taskController.updateTask);
+taskRouter.use(
+  "/:taskId",
+  taskMiddlewares.taskExists,
+  taskMiddlewares.UserOwnerTask
+);
 
-taskRouter.delete("/:taskId", taskController.deleteTask);
+taskRouter.get(
+  "/:taskId",
+  taskMiddlewares.ensureCategoryExists,
+  taskController.findOne,
+  taskMiddlewares.ensureUserIsTaskOwner
+);
+
+taskRouter.patch(
+  "/:taskId",
+  taskMiddlewares.validateBody(taskUpdateSchema),
+  taskController.updateTask
+);
+
+taskRouter.delete("/:taskId", taskController.delete);

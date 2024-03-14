@@ -1,55 +1,38 @@
-import { task } from "./../tests/mocks/tasks.mocks";
 import { Request, Response } from "express";
 import { TaskService } from "../services/taskService";
 
 export class TaskController {
   private taskService = new TaskService();
 
-  public createTask = async (
+  public create = async (
     request: Request,
     response: Response
   ): Promise<Response> => {
-    return response
-      .status(201)
-      .json(await this.taskService.createTask(request.body));
+    const id = response.locals.id;
+    const body = request.body;
+    const newTask = await this.taskService.create(body, id);
+    return response.status(201).json(newTask);
   };
 
-  public getAllTask = async (
-    request: Request,
-    response: Response
-  ): Promise<Response> => {
-    return response.status(200).json(await this.taskService.getAllTask());
+  public findOne = async (req: Request, res: Response): Promise<Response> => {
+    const taskId = Number(req.body.taskId);
+    const task = await this.taskService.findOne(taskId);
+    return res.status(200).json(task);
   };
 
-  public updateTask = async (
-    request: Request,
-    response: Response
-  ): Promise<Response> => {
-    return response
-      .status(200)
-      .json(
-        await this.taskService.updateTask(
-          parseInt(request.params.taskId),
-          request.body
-        )
-      );
+  public findMany = async (_req: Request, res: Response): Promise<Response> => {
+    return res.status(200).json(await this.taskService.findMany());
   };
 
-  public getById = async (
-    request: Request,
-    response: Response
-  ): Promise<Response> => {
-    return response
-      .status(201)
-      .json(await this.taskService.getById(request.body));
+  public updateTask = async (req: Request, res: Response) => {
+    const taskId = Number(req.params.taskId);
+    const updatedTask = await this.taskService.update(taskId, req.body);
+    return res.status(200).json(updatedTask);
   };
 
-  public deleteTask = async (
-    request: Request,
-    response: Response
-  ): Promise<Response> => {
-    return response
-      .status(204)
-      .json(await this.taskService.deleteTask(request.body));
+  delete = async (request: Request, response: Response): Promise<Response> => {
+    const params = Number(request.params.id);
+    const task = await this.taskService.delete(params);
+    return response.status(204).json(task);
   };
 }
