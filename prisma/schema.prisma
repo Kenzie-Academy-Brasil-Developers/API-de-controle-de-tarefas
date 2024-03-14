@@ -17,7 +17,6 @@ model Task {
   finished   Boolean   @default(false)
   categoryId Int?
   category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  userId     Int?
 }
 
 model Category {

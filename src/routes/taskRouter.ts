@@ -16,19 +16,14 @@ taskRouter.post(
   taskController.create
 );
 
-taskRouter.get("/", taskController.findOne);
+taskRouter.get("/", taskController.findMany);
 
-taskRouter.use(
-  "/:taskId",
-  taskMiddlewares.taskExists,
-  taskMiddlewares.UserOwnerTask
-);
+taskRouter.use("/:taskId", taskMiddlewares.taskExists);
 
 taskRouter.get(
   "/:taskId",
   taskMiddlewares.ensureCategoryExists,
-  taskController.findOne,
-  taskMiddlewares.ensureUserIsTaskOwner
+  taskController.findOne
 );
 
 taskRouter.patch(

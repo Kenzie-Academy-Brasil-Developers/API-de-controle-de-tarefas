@@ -1,3 +1,4 @@
+import { category } from "./../tests/mocks/category.mocks";
 import { Request, Response } from "express";
 import { TaskService } from "../services/taskService";
 
@@ -15,13 +16,16 @@ export class TaskController {
   };
 
   public findOne = async (req: Request, res: Response): Promise<Response> => {
-    const taskId = Number(req.body.taskId);
+    const taskId = Number(req.params.taskId);
     const task = await this.taskService.findOne(taskId);
     return res.status(200).json(task);
   };
 
-  public findMany = async (_req: Request, res: Response): Promise<Response> => {
-    return res.status(200).json(await this.taskService.findMany());
+  public findMany = async (req: Request, res: Response): Promise<Response> => {
+    const category = req.query.category
+      ? String(req.query.category)
+      : undefined;
+    return res.status(200).json(await this.taskService.findMany(category));
   };
 
   public updateTask = async (req: Request, res: Response) => {
@@ -30,8 +34,11 @@ export class TaskController {
     return res.status(200).json(updatedTask);
   };
 
-  delete = async (request: Request, response: Response): Promise<Response> => {
-    const params = Number(request.params.id);
+  public delete = async (
+    request: Request,
+    response: Response
+  ): Promise<Response> => {
+    const params = Number(request.params.taskId);
     const task = await this.taskService.delete(params);
     return response.status(204).json(task);
   };

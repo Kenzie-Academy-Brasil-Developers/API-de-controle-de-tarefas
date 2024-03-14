@@ -38,7 +38,8 @@ export class TaskService {
 
   //  obter uma única tarefa pelo ID
   findOne = async (id: number): Promise<TaskSchema | null> => {
-    const singleTask = await prisma.task.findFirst({
+    console.log(id);
+    const singleTask = await prisma.task.findUnique({
       where: {
         id,
       },
