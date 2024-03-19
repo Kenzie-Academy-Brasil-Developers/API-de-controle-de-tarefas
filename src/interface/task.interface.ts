@@ -1,16 +1,15 @@
 import { z } from "zod";
 
 import {
-  taskCreateSchema,
+  taskSchemaCreate,
   taskReturnSchema,
-  taskSchema,
   taskCategoryReturn,
+  taskUpdateSchema,
 } from "../schemas/task.schema";
 
-type TaskCreate = z.infer<typeof taskCreateSchema>;
-type TaskReturnCategory = z.infer<typeof taskCategoryReturn>;
-type TaskUpdate = Partial<TaskCreate>;
-type TaskReturn = z.infer<typeof taskReturnSchema>;
-type TaskSchema = z.infer<typeof taskSchema>;
+type taskCreate = z.infer<typeof taskSchemaCreate>;
+type taskReturnCategory = z.infer<typeof taskCategoryReturn>;
+type taskUpdate = z.infer<typeof taskUpdateSchema>;
+type taskReturn = z.infer<typeof taskReturnSchema>;
 
-export { TaskCreate, TaskUpdate, TaskReturn, TaskSchema, TaskReturnCategory };
+export { taskCreate, taskUpdate, taskReturn, taskReturnCategory };

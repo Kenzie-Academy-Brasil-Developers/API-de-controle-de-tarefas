@@ -15,7 +15,7 @@ export class TaskMiddlewares {
 
     const taskFind = await prisma.task.findFirst({
       where: { id: Number(taskId) },
-      include: { category: true },
+      include: { category: true, user: true },
     });
 
     if (!taskFind) {
@@ -27,14 +27,14 @@ export class TaskMiddlewares {
 
   // o usuario que fez a requisição seja o proprietario
   public ensureUserIsTaskOwner = async (
-    _req: Request,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const userId = res.locals.sub;
+    const userId = Number(res.locals.decodedUser.id);
     const { foundTask } = res.locals;
 
-    if (foundTask?.userId !== userId) {
+    if (foundTask?.user.id !== userId) {
       throw new AppError("This user is not the task owner", 403);
     }
 
@@ -61,22 +61,24 @@ export class TaskMiddlewares {
 
     return next();
   };
+
   public validateBody =
     (schema: AnyZodObject) =>
     (req: Request, _res: Response, next: NextFunction): void => {
       req.body = schema.parse(req.body);
       return next();
     };
+
   public UserOwnerTask = async (
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const userId = Number(res.locals.sub);
+    const userId = Number(res.locals.decodedUser.id);
 
-    const { task } = res.locals;
+    const { taskFind } = res.locals;
 
-    if (task?.userId !== userId) {
+    if (taskFind?.userId !== userId) {
       throw new AppError("This user is not the task owner", 403);
     }
     return next();

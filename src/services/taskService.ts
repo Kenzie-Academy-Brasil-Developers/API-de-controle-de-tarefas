@@ -1,24 +1,28 @@
 import { prisma } from "../database/prisma";
 import { taskReturnSchema, taskSchema } from "../schemas/task.schema";
 import {
-  TaskCreate,
-  TaskReturnCategory,
-  TaskSchema,
-  TaskUpdate,
+  taskCreate,
+  taskUpdate,
+  taskReturn,
+  taskReturnCategory,
 } from "../interface/task.interface";
 
 export class TaskService {
   //  criar uma nova tarefa
-  create = async (body: TaskCreate, id: number): Promise<TaskSchema> => {
-    return taskSchema.parse(await prisma.task.create({ data: body }));
+  create = async (body: taskCreate, userId: number): Promise<taskReturn> => {
+    return taskSchema.parse(
+      await prisma.task.create({ data: { ...body, userId } })
+    );
   };
 
   //  obter todas as tarefas
   findMany = async (
-    categoryName?: string
-  ): Promise<Array<TaskReturnCategory>> => {
+    categoryName?: string,
+    id?: number
+  ): Promise<Array<taskReturnCategory>> => {
     const tasks = await prisma.task.findMany({
       where: {
+        userId: id,
         ...(categoryName && { category: { name: categoryName } }),
       },
       include: { category: true },
@@ -28,21 +32,22 @@ export class TaskService {
   };
 
   //  atualizar uma tarefa existente
-  update = async (id: number, payload: TaskUpdate): Promise<TaskSchema> => {
-    const update = await prisma.task.update({
-      where: { id: Number(id) },
-      data: payload,
+  updateTask = async (id: number, data: taskUpdate): Promise<taskReturn> => {
+    const task = await prisma.task.update({
+      where: { id },
+      data,
     });
-    return taskReturnSchema.parse(update);
+    return taskReturnSchema.parse(task);
   };
 
   //  obter uma única tarefa pelo ID
-  findOne = async (id: number): Promise<TaskSchema | null> => {
+  findOne = async (id: number): Promise<taskReturn | null> => {
     console.log(id);
     const singleTask = await prisma.task.findUnique({
       where: {
         id,
       },
+      include: { category: true },
     });
     return singleTask;
   };

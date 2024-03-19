@@ -1,40 +1,50 @@
-import { category } from "./../tests/mocks/category.mocks";
 import { Request, Response } from "express";
 import { TaskService } from "../services/taskService";
 
 export class TaskController {
   private taskService = new TaskService();
 
-  public create = async (
-    request: Request,
-    response: Response
+  public createTask = async (
+    req: Request,
+    res: Response
   ): Promise<Response> => {
-    const id = response.locals.id;
-    const body = request.body;
+    const id = Number(res.locals.decoded.sub);
+    console.log(id);
+    const body = req.body;
     const newTask = await this.taskService.create(body, id);
-    return response.status(201).json(newTask);
+    return res.status(201).json(newTask);
   };
 
-  public findOne = async (req: Request, res: Response): Promise<Response> => {
+  public findOneTask = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
     const taskId = Number(req.params.taskId);
     const task = await this.taskService.findOne(taskId);
     return res.status(200).json(task);
   };
 
-  public findMany = async (req: Request, res: Response): Promise<Response> => {
+  public findManyTask = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
+    const id = Number(res.locals.decoded.sub);
     const category = req.query.category
       ? String(req.query.category)
       : undefined;
-    return res.status(200).json(await this.taskService.findMany(category));
+    return res.status(200).json(await this.taskService.findMany(category, id));
   };
 
-  public updateTask = async (req: Request, res: Response) => {
+  public updateTask = async (
+    req: Request,
+    res: Response
+  ): Promise<Response> => {
     const taskId = Number(req.params.taskId);
-    const updatedTask = await this.taskService.update(taskId, req.body);
+    const updatedTask = await this.taskService.updateTask(taskId, req.body);
     return res.status(200).json(updatedTask);
   };
 
-  public delete = async (
+  public deleteTask = async (
     request: Request,
     response: Response
   ): Promise<Response> => {

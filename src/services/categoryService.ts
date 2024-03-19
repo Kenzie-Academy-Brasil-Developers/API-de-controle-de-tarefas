@@ -7,8 +7,11 @@ interface CreateCategoryPayload extends createCategory {
 }
 
 export class CategoryService {
-  async create(payLoad: CreateCategoryPayload): Promise<Category> {
-    return await prisma.category.create({ data: { ...payLoad } });
+  async create(
+    payLoad: CreateCategoryPayload,
+    userId: number
+  ): Promise<Category> {
+    return await prisma.category.create({ data: { ...payLoad, userId } });
   }
 
   async delete(categoryId: number): Promise<void> {

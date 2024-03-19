@@ -8,20 +8,27 @@ const taskSchema = z.object({
   finished: z.boolean().default(false),
   categoryId: z.number().positive().nullish(),
 });
-
-const taskCategoryReturn = taskSchema.extend({
-  category: categorySchema.nullish(),
+const taskSchemaCreate = taskSchema.pick({
+  title: true,
+  content: true,
+  categoryId: true,
 });
 const taskCreateSchema = taskSchema.omit({ id: true });
-const taskUpdateSchema = taskSchema.omit({ id: true }).partial();
+
 const taskReturnSchema = taskSchema
   .extend({
     category: categorySchema.nullish(),
   })
   .omit({ categoryId: true });
 
+const taskCategoryReturn = taskSchema.extend({
+  category: categorySchema.nullish().optional(),
+});
+
+const taskUpdateSchema = taskCreateSchema.partial().omit({ categoryId: true });
+
 export {
-  taskCreateSchema,
+  taskSchemaCreate,
   taskUpdateSchema,
   taskReturnSchema,
   taskSchema,
