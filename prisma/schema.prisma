@@ -10,11 +10,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// id - inteiro, chave primária e autoincrementado.
-// name - texto, obrigatório.
-// email - texto, obrigatório e único.
-// password - texto, obrigatório.
-
 model User {
   id       Int    @id @default(autoincrement())
   name     String
