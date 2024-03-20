@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { prisma } from "../database/prisma";
 import { AppError } from "../errors/AppError";
 
-//STATUS (409) - E-mail já cadastrado
 // verificação  de endereços de e-mail
 export class UserValidate {
   public uniqueEmail = async (
