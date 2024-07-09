@@ -1,5 +1,7 @@
 # M5 - Entrega 1 - Gerenciamento de Tarefas API
 
+"O objetivo deste projeto é desenvolver uma API de controle de tarefas que permita aos usuários gerenciar suas tarefas e categorias de forma eficiente. A API inclui funcionalidades para criar, ler, atualizar e deletar tarefas e categorias, com um banco de dados modelado utilizando Prisma."
+
 Está documentação servirá de base para entrega, todas as rotas deverão se comportar assim como está previsto na documentação abaixo:
 
 ### Criação de tarefa POST /tasks
